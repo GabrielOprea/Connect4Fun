@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+      - name: grafana
+        image: grafana/grafana:latest  # Use the appropriate Grafana image tag
+        ports:
+        - containerPort: 3000  # Default Grafana port
+        env:
+        - name: GF_SECURITY_ADMIN_USER
+          value: admin  # Set your Grafana admin username
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          value: admin1234  # Set your Grafana admin password
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana-service
+spec:
+  selector:
+    app: grafana
+  ports:
+  - protocol: TCP
+    port: 3000
+    targetPort: 3000
+  type: ClusterIP  # You can adjust the service type based on your needs

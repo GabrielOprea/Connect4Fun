@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: adminer-configmap
+data:
+  adminer_design: pepa-linha
+  adminer_default_service: mysql-service

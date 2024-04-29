@@ -1,0 +1,35 @@
+{
+	"name": "connect4fun",
+	"version": "1.0.0",
+	"description": "The web application aims to facilitate the connection of individuals passionate about various activities, such as football, gaming, travel, and much more.",
+	"main": "index.js",
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint"
+	},
+	"author": "Ledezeu Robert-Gabriel, Oprea-Groza Gabriel, Smau Alexandra-Mara",
+	"license": "ISC",
+	"dependencies": {
+		"@emotion/css": "^11.11.2",
+		"@emotion/react": "^11.11.3",
+		"@emotion/style": "^0.8.0",
+		"@emotion/styled": "^11.11.0",
+		"@mui/icons-material": "^5.15.4",
+		"@mui/material": "^5.15.4",
+		"@mui/styled-engine-sc": "^6.0.0-alpha.12",
+		"libphonenumber-js": "^1.10.53",
+		"next": "^14.0.4",
+		"node": "^21.2.0",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"react-router-dom": "^6.21.2",
+		"styled-components": "^6.1.8"
+	},
+	"devDependencies": {
+		"eslint": "^8.56.0",
+		"eslint-config-next": "^12.3.1",
+		"eslint-plugin-react": "^7.33.2"
+	}
+}

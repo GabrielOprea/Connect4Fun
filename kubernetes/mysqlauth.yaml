@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysqlauth-pv
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 750Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data/mysql-auth"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysqlauth-pvc
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 750Mi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysqlauth-deployment
+  labels:
+    app: mysqlauth
+spec:
+  containers:
+    - image: mysql:8.0.35
+      name: mysqlauth-container
+      volumeMounts:
+        - name: mysqlauth-vol
+          mountPath: /var/lib/mysql
+      ports:
+        - containerPort: 3306
+      env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: root
+        - name: MYSQL_DATABASE
+          value: connect
+        - name: MYSQL_USER
+          value: admin
+        - name: MYSQL_PASSWORD
+          value: admin1234
+  volumes:
+    - name: mysqlauth-vol
+      persistentVolumeClaim:
+        claimName: mysqlauth-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysqlauth-service
+spec:
+  type: ClusterIP
+  selector:
+    app: mysqlauth
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
