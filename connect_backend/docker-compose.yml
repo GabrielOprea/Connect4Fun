@@ -1,0 +1,160 @@
+version: "3"
+
+services:
+
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    ports:
+      - 9443:9443
+    volumes:
+      - ./portainer_data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - ADMIN_USERNAME=connect4fun-admin
+      - ADMIN_PASSWORD=connect4fun-admin123
+    restart: unless-stopped
+
+
+  mysql:
+    image: mysql:8.0.35
+    container_name: mysql
+    networks:
+      - backend
+      - adminer
+
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: connect
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin1234
+    ports:
+      - "3600:3306"
+   volumes:
+     - my-datavolume:/var/lib/mysql
+
+
+  mysqlauth:
+    image: mysql:8.0.35
+    container_name: mysqlauth
+    networks:
+      - authnet
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: connect
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin1234
+    ports:
+      - "3307:3306"
+    volumes:
+      - my-datavolumeauth:/var/lib/mysql
+
+  djangoservice:
+    build: .
+    depends_on:
+      - mysql
+    container_name: djangoservice
+    networks:
+      - backend
+      - prometheusnet
+      - frontend
+      - authnet
+    volumes:
+      - .:/djangoservice
+    ports:
+      - "8000:8000"
+
+
+  djangoauth:
+    build: ../connect_auth
+    depends_on:
+      - mysqlauth
+    container_name: djangoauth
+    networks:
+      - authnet
+    volumes:
+      - .:/djangoauth
+    ports:
+      - "8001:8001"
+
+
+  react_service:
+    build: ../connect4fun-client
+
+    container_name: react_service
+    networks:
+      - frontend
+    volumes:
+      - .:/react_service
+    ports:
+      - "3000:3000"
+
+  prometheus:
+    image: prom/prometheus
+    networks:
+      - prometheusnet
+      - grafananet
+    volumes:
+    - ./prometheus/:/etc/prometheus/
+    command:
+    - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+    - 9090:9090
+
+
+  grafana:
+    image: grafana/grafana:latest
+    networks:
+      - grafananet
+    depends_on:
+      - prometheus
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: grafanaConnect
+      GF_SECURITY_ADMIN_USER: grafanaConnect123
+    ports:
+      - 5000:3000
+    volumes:
+      - grafana:/var/lib/grafana
+      - ./grafana-provisioning/:/etc/grafana/provisioning
+
+  adminer:
+    build: .
+    depends_on:
+      - mysql
+    container_name: adminer
+    image: adminer
+    environment:
+      ADMINER_DEFAULT_SERVER: mysql
+      ADMINER_USERNAME: admin
+      ADMINER_PASSWORD: admin1234
+      ADMINER_DATABASE: connect
+      ADMINER_AUTOLOGIN: 1
+    ports:
+      - 8080:8080
+    networks:
+      - adminer
+    volumes:
+      - .:/adminer
+    restart: always
+
+volumes:
+  grafana:
+  my-datavolume:
+  my-datavolumeauth:
+  portainer_data:
+  adminer:
+
+
+networks:
+  authnet:
+    name: authnet
+  prometheusnet:
+    name: prometheusnet
+  grafananet:
+    name: grafananet
+  backend:
+    name: backend
+  frontend:
+    name: frontend
+  adminer:
+    name: adminer
