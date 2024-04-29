@@ -1,70 +1,51 @@
-<<<<<<< HEAD
-# Connect4Fun
-=======
-Titlu: Connect4Fun - Platforma web de socializare
+Title: Connect4Fun - Socializing Web Platform
 
-Membrii:
-Robert-Andrei Ledezeu
-Gabriel Oprea-Groza
-Alexandra Mara Smau
+Members: Robert-Andrei Ledezeu, Gabriel Oprea-Groza, Alexandra Mara Smau
 
 Github: https://github.com/AlexandraMaraSmau/CC
 
-Aplicatia
+The Application
 
-Aplicatia contine trei componente (backend, frontend, autentficare si autorizare)
-care sunt integrate fiecare pe un microserviciu propriu.
+The application consists of three components (backend, frontend, authentication, and authorization), each integrated into its own microservice.
 
 MySQL
 
-Aplicatia contine doua baze de date, una pentru autentificare si autorizare si
-cealalta pentru backend. MySQL in kubernetis contine secrete, o mapa de configurare, tipul serviciului este ClusterIP.
+The application contains two databases, one for authentication and authorization, and the other for the backend. MySQL in Kubernetes contains secrets, a configuration map, and the service type is ClusterIP.
 
 Adminer
 
-Adminer interactioneaza si gestioneaza tabelele din baza de date. Acesta in kubernetis contine o mapa de configurare si tipul serviciului este NodePort.
+Adminer interacts with and manages the tables in the database. It in Kubernetes contains a configuration map, and the service type is NodePort.
 
 Grafana
 
-Grafana este un instrument puternic pentru monitorizarea și vizualizarea datelor si se foloseste de Prometheus. In kubernetis tipul serviciului este ClusterIP.
+Grafana is a powerful tool for monitoring and visualizing data and uses Prometheus. In Kubernetes, the service type is ClusterIP.
 
+Portainer
 
-Portnainer
-
-Portainer este o aplicatie care gestioneaza reteaua de dockere din configuratie. In kubernetis tipul serviciului este NodePort.
+Portainer is an application that manages the Docker network in the configuration. In Kubernetes, the service type is NodePort.
 
 Prometheus
 
-Prometheus este un sistem de monitorizare. In kubernetis contine o mapa de configurare si tipul serviciului este NodePort.
+Prometheus is a monitoring system. In Kubernetes, it contains a configuration map, and the service type is NodePort.
 
 Docker Images:
-Bussiness Logic: extremegabryel/connect_backend-djangoservice:latest
+
+Business Logic: extremegabryel/connect_backend-djangoservice:latest
 Auth: extremegabryel/connect_backend-djangoauth:latest
 UI: extremegabryel/connect_backend-react_service:latest
-
-Docker(file docker-compose.yml):
-Set up: docker-compose -f docker-compose.yml up
+Docker (docker-compose.yml file):
+Setup: docker-compose -f docker-compose.yml up
 
 Kubernetes:
 
-Au fost folosite dockere ce sunt reprezentate de microserviciile pentru cele backend, frontend, autentificare si autorizare. Utilitarele folosite au fost configurare tot pe Dockere. Toate acestea au fost configurate sa ruleze pe un cluster Kubernetes ce contine un panou de control si workeri.
+Docker containers were used, representing the microservices for backend, frontend, authentication, and authorization. The utilities used were also configured on Docker. All of these were configured to run on a Kubernetes cluster containing a control panel and workers.
 
-Set up:
-minikube start -n 3 or kubectl apply -f kind-config.yaml
-kubectl apply -f adminer-configmap.yaml
-kubectl apply -f adminer.yaml
-kubectl apply -f auth.yaml
-kubectl apply -f bussines-logic.yaml
-kubectl apply -f …..
+Setup: minikube start -n 3 or kubectl apply -f kind-config.yaml kubectl apply -f adminer-configmap.yaml kubectl apply -f adminer.yaml kubectl apply -f auth.yaml kubectl apply -f bussines-logic.yaml kubectl apply -f …..
 
-Terraform (file - main.tf):
+Terraform (main.tf file):
 
-A fost folosit pentru a crea infrastructura de Kubernetes.
+It was used to create the Kubernetes infrastructure.
 
-Contain: 2 x MySql, Bussines Logic, UI, Auth, Adminer
-Set up:
-terraform apply
-terraform file: main.tf
-
-
->>>>>>> origin/master
+Contains: 2 x MySQL, Business Logic, UI, Auth, Adminer
+Setup: terraform apply
+Terraform file: main.tf
